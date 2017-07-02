@@ -86,7 +86,7 @@ class Page extends Component {
     }else{
       return (
         <div> 
-         <button onClick={()=>this.getUser()}>Начать новый день</button>
+         <button onClick={this.getUser()}>Начать новый день</button>
         </div>
     )
     }
