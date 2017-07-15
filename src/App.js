@@ -1,35 +1,49 @@
-  import React, { Component } from 'react';
+import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import firebase from 'firebase';
-import moment from 'moment';
+import Page from './Page'
+import { Button } from 'react-bootstrap'
 
 var provider = new firebase.auth.GoogleAuthProvider();
 
 class App extends Component {
   constructor(props){
-    super(props);
-    this.state={
-      user:false,
+    super(props)
+    const userFromStorage = localStorage.getItem('WeightApp')
+    const isUser = userFromStorage !== null
+    const user = isUser ? JSON.parse(userFromStorage) : {}
+    this.state = {
+      autificated:isUser,
+      user,
     }
   }
 
   componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => this.setState({ user }))
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('logged in');
+        this.setState({ 
+          user ,
+          autificated:true
+        });
+      }
+    });
+    
   }
 
   logIn(){
     firebase.auth().signInWithRedirect(provider);
-  }
+   }
    
   render() {
+
     let showPage;
-      if(this.state.user){
+    if(this.state.autificated){
         showPage =  <Page user={ this.state.user }/>
       }else{
-        showPage = <button onClick={()=>this.logIn()}> Sync with Google Account</button>
+        showPage = <Button onClick={()=>this.logIn()}> Sync with Google Account</Button>
       }
-      console.log(' HUI', this.state.user)
     return (
       <div className="App">
         <div className="App-header">
@@ -44,90 +58,5 @@ class App extends Component {
 
 export default App;
 
-class Page extends Component {
-
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      current: {},
-      day: {},
-      water:'',
-      callory:'',
-      item: '',
-      endday:false,
-      noday:false
-    }
-  }
-
-  getUser(props){
-       firebase.database().ref('Days')
-      .push({ 
-        water: 'water',
-        callory: '1',
-        day:moment().format('YYYY-MM-DD'),
-        user: this.props.user.uid
-      });
-      firebase.database().ref('Users')
-      .push({ 
-         user: this.props.user.uid
-      });
-  }
-
-  lastDay(){
-    if(this.state.endday || this.state.noday){
-      return (
-        <div>
-          полоска еды
-          полоска воды
-          <button>Добавить</button>
-        </div>
-      )
-    }else{
-      return (
-        <div> 
-         <button onClick={this.getUser()}>Начать новый день</button>
-        </div>
-    )
-    }
-  }
 
 
-  render(){
-    return(
-      <div>
-        {this.lastDay()}
-      </div>
-    )
-  }
-}
-
-
-
-
-
-// class NewDay extends Component {
-
-//   // getGram(grams){
-//   //      firebase.database().ref(this.props.user.uid + '/' + moment().format('YYYY-MM-DD'))
-//   //     .push({ 
-//   //       day: this.state.slot, 
-//   //       weight: grams 
-//   //     });
-//   // }
-
-//   render(){
-//     return(
-//       <div> 
-//         <button>Начать новый день</button>
-//       </div>
-//       )
-//   }
-// }
-// class CurrentDay extends Component {
-//   render(){
-//     return(
-      
-//       )
-//   }
-// }

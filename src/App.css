@@ -9,9 +9,9 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
   padding: 20px;
   color: white;
+  margin-bottom:20px;
 }
 
 .App-intro {
@@ -21,4 +21,11 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+h2{
+  padding:10px;
+}
+.progress{
+  margin:30px;
 }
