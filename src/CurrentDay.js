@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button , Modal , ProgressBar} from 'react-bootstrap';
 import firebase from 'firebase'
-
+import moment from 'moment';
 
 class CurrentDay extends Component {
 
@@ -14,25 +14,34 @@ class CurrentDay extends Component {
       showItem2:false,
       term:'',
       user:'',
-      key:''
+      key:'',
+      addAt:'',
+      totalCalory:'',
+      totalWater:'',
+      total:'',
     }
   }
 
   componentDidMount() {
-    const { uid } = this.props.user
-    firebase.database().ref('Users/' + uid).once('value')
+    // const { uid } = this.props.user
+    firebase.database().ref('Days/' + this.state.key + '/user').once('value')
     .then(snapshot => {
-      const snapshotval = snapshot.val()
-      const { key, user } = snapshot.val()
-       if (snapshotval !== null) {
-        this.setState({
-          user,
-          key
-        })
-      }}
-      )
-
-    }
+      console.log(snapshot.val())
+      this.setState({
+        total:snapshot.val(),
+        
+      })
+     console.log(this.state.total)
+      // const snapshotval = snapshot.val()
+      // const { key, user } = snapshot.val()
+      //  if (snapshotval !== null) {
+      //   this.setState({
+      //     user,
+      //     key
+      //   })
+      // }
+      })
+      }
 
   onInputChangeCalory(calory){
     this.setState({calory});
@@ -41,19 +50,24 @@ class CurrentDay extends Component {
     this.setState({water});
    }
   addWater(){
-    firebase.database().ref('Days/' + this.state.key + '/totalThisDay')
-    .update({ 
+    firebase.database().ref('Days/' + this.state.key + '/user')
+    .push({ 
       water:this.state.water,
+      addAt:moment().format('DD MMM YYYY hh:mm a'),
     });
   }
   addCalory(){
-    firebase.database().ref('Days/' + this.state.key + '/totalThisDay')
-    .update({ 
+    firebase.database().ref('Days/' + this.state.key + '/user')
+    .push({ 
       calory:this.state.calory,
+      addAt:moment().format('DD MMM YYYY hh:mm a'),
     });
   }
 
    render() {
+   
+    let waterNorm = this.props.waterNorm;
+    let caloryNorm = this.props.caloryNorm;
     let item;
     if(this.state.showItem1){
       item =   
@@ -92,7 +106,7 @@ class CurrentDay extends Component {
                     <label  className="control-label">Введите количество,в литрах</label>
                     <input 
                     type='number' 
-                    placeholder='Например 140'
+                    placeholder='Например 12'
                     value={this.state.water}
                     onChange={event => this.onInputChangeWater(event.target.value)} />
            </Modal.Body>
@@ -109,14 +123,18 @@ class CurrentDay extends Component {
             </Modal.Dialog>
           </div>
     }
-console.log(this.state.water,this.state.calory)
     return (
       <div>
-        <ProgressBar bsStyle="success" active now={40} />
-        <Button bsStyle="success" onClick={()=>this.setState({showItem1:true})}> Добавить Калории </Button>
-        <ProgressBar bsStyle="info" active now={20} />
-        <Button bsStyle="info" onClick={()=>this.setState({showItem2:true})}> Добавить Воду </Button>
+         <h3>Британские учёные провели исследование и выяснили,что ваша дневная норма составляет 2500ккал и 3 литра воды.</h3>
+      <div className ="screen">
+        <ProgressBar bsStyle="success" active now={ 100*this.state.calory/caloryNorm } />
+        <Button bsStyle="success" onClick={()=>this.setState({ showItem1:true })}> Добавить Калории </Button>
+        <ProgressBar bsStyle="info" active now={ 100*this.state.water/waterNorm } />
+        <Button bsStyle="info" onClick={()=>this.setState({ showItem2:true})}> Добавить Воду </Button>
           {item}
+          <p>Сьедено на 5000 калорий</p>
+          <p>Выпито 2 литра</p>
+        </div>
         </div>
     );
   }

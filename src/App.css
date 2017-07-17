@@ -8,7 +8,7 @@
 }
 
 .App-header {
-  background-color: #222;
+  background-color: black;
   padding: 20px;
   color: white;
   margin-bottom:20px;
@@ -28,4 +28,27 @@ h2{
 }
 .progress{
   margin:30px;
+}
+.screen{
+  margin-top:50px;
+}
+body{
+  text-align: center;
+  background-image: url("http://www.urwallpapers.com/wp-content/uploads/FoodnDrinks/vegetables-and-spoons-on-a-wooden-table.jpg");
+
+  background-size: cover;
+}
+h3{ 
+  color:white;
+  text-shadow: 1px 1px 2px black, 0 0 1em #00ffff; /* Параметры тени */
+  margin-left:55%;
+  width: 800px;
+  text-align:left;
+}
+p{
+  margin-left:50px;
+  text-align:left;
+  color:white;
+  font-size:32px;
+  text-shadow: 2px 2px 2px black;
 }

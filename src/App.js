@@ -16,17 +16,24 @@ class App extends Component {
     this.state = {
       autificated:isUser,
       user,
+      loading: true,
+      day:'',
+      newDay:true,
     }
   }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('logged in');
         this.setState({ 
           user ,
           autificated:true
         });
+      }else{
+        this.setState({
+          authenticated: false, 
+          user: {}});
+        localStorage.removeItem('WeightApp');
       }
     });
     
@@ -34,24 +41,29 @@ class App extends Component {
 
   logIn(){
     firebase.auth().signInWithRedirect(provider);
-   }
-   
+   }  
+
   render() {
 
     let showPage;
+
     if(this.state.autificated){
         showPage =  <Page user={ this.state.user }/>
       }else{
         showPage = <Button onClick={()=>this.logIn()}> Sync with Google Account</Button>
       }
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Худеем Вкусно!</h2>
+     <div>
+        <div className="App">
+         <div className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+              <h2>Худеть можно Вкусно!</h2>
         </div>
+        </div>
+        <div className="body">
           {showPage}
         </div>
+     </div>
     );
   }
 }

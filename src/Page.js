@@ -14,57 +14,63 @@ class Page extends Component {
       calory:'',
       item: '',
       endday:false,
-      noday:false,
-      caloryNorm:'',
-      waterNorm:'',
+      noDay:'',
+      caloryNorm:'2500',
+      waterNorm:'3',
     }
   }
-// componentDidMount() {
-// 	const { uid } = this.props.user
-//       firebase.database().ref('Users/' + uid).once('value').then(snapshot => {
-//       const snapshotval = snapshot.val()
-//       const { calory, dayStart,water, uid } = snapshot.val()
-//       if (snapshotval !== null) {
-//         if (snapshot.val().dayStart + 86400000 > moment()) {
-//           this.setState({
-//             water:'',
-//             calory:'',
-//             dayStart:'',
-//           })
-//         }
-//       }
-//     })
-//   }
+
+  componentDidMount() {
+    const { uid } = this.props.user
+    firebase.database().ref('Users/' + uid).once('value')
+      .then(snapshot => {
+        this.setState({
+          noDay:snapshot.val()
+        })
+      })
+
+    }
+
   getUser(props){
     const { uid } = this.props.user
     const key = firebase.database().ref('Days').push({ }).key;
-    const dayStart = Date.now()
-
+    let noDay = { 
+      user:uid,
+      caloryNorm:this.state.caloryNorm,
+      waterNorm:this.state.waterNorm,
+      dayStart:moment().format('DD MMM YYYY'),
+      key:key
+    }
     firebase.database().ref('Days/' + key)
     .update({ 
-      dayStart:moment().format('DD MMM YYYY hh:mm a'),
-      user:uid
+      dayStart:moment().format('DD MMM YYYY'),
+      time:moment().format('DD MMM YYYY hh:mm a'),
     });
-
+    firebase.database().ref('Days/' + key + '/user')
+    .update({ 
+         user:uid,
+      });
     firebase.database().ref('Users/' + uid )
-    .set({ 
-      user:uid,
-      caloryNorm:'2500',
-      waterNorm:'3',
-      dayStart:moment().format('DD MMM YYYY hh:mm a'),
-      key:key
-    });
+    .set(noDay);
     
     this.setState({
       dayStart: Date.now(),
-      endday:true,
+      noDay,
     })
+  }
+ 
+  checkDay(){
+    const {dayStart} = this.state.noDay;
+    return(
+        dayStart === moment().format('DD MMM YYYY')
+    )
   }
 
   checkLastDay(){
-    if(this.state.endday){
+
+    if(this.state.noDay && this.checkDay() && this.props.user !== null){
       return (
-        <CurrentDay user={this.props.user}/>
+        <CurrentDay user={this.props.user} caloryNorm={this.state.caloryNorm} waterNorm={this.state.waterNorm}/>
       )
     }else{
       return (
@@ -76,7 +82,7 @@ class Page extends Component {
   }
 
   render(){
-    return(
+      return(
       <div>
         {this.checkLastDay()}
       </div>
