@@ -11,7 +11,7 @@
   background-color: black;
   padding: 20px;
   color: white;
-  margin-bottom:20px;
+
 }
 
 .App-intro {
@@ -29,21 +29,30 @@ h2{
 .progress{
   margin:30px;
 }
-.screen{
+/*.screen{
   margin-top:50px;
-}
-body{
+}*/
+.body{
+  width:100%;
+  height:763px;
   text-align: center;
-  background-image: url("http://www.urwallpapers.com/wp-content/uploads/FoodnDrinks/vegetables-and-spoons-on-a-wooden-table.jpg");
-
+  background-image: url("https://cdn.suwalls.com/wallpapers/photography/basket-of-hazelnuts-on-the-wooden-table-48536-2880x1800.jpg");
+ background-repeat: no-repeat;
   background-size: cover;
+    background-position: center top;
 }
 h3{ 
+  padding-top: 10px;
+  margin-top: 0px;
   color:white;
   text-shadow: 1px 1px 2px black, 0 0 1em #00ffff; /* Параметры тени */
   margin-left:55%;
   width: 800px;
   text-align:left;
+  min-width: 30%;
+  max-width: 70%;
+  height:50px;
+
 }
 p{
   margin-left:50px;
@@ -51,4 +60,8 @@ p{
   color:white;
   font-size:32px;
   text-shadow: 2px 2px 2px black;
+  min-width: 200px;
+}
+.newDay{
+  margin-top: 30px;
 }

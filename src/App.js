@@ -36,7 +36,6 @@ class App extends Component {
         localStorage.removeItem('WeightApp');
       }
     });
-    
   }
 
   logIn(){
@@ -50,15 +49,15 @@ class App extends Component {
     if(this.state.autificated){
         showPage =  <Page user={ this.state.user }/>
       }else{
-        showPage = <Button onClick={()=>this.logIn()}> Sync with Google Account</Button>
+        showPage = <Button className="newDay" bsSize="large" onClick={()=>this.logIn()}> Sync with Google Account</Button>
       }
     return (
      <div>
         <div className="App">
-         <div className="App-header">
+          <div className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
               <h2>Худеть можно Вкусно!</h2>
-        </div>
+          </div>
         </div>
         <div className="body">
           {showPage}
